@@ -38,7 +38,7 @@ jobs:
           region: "${{ env.REGION }}"
           project_id: "${{ env.PROJECT_ID }}"
           source: "./apps/backend"
-          allow-unauthenticated: "true"
+          flags: --allow-unauthenticated
 
       # 4. Показати URL задеплоєного сервісу
       - name: "Show output"
