@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: "${{ secrets.PROJECT_ID }}" # TODO: update to your Google Cloud project ID
   REGION: "${{ secrets.REGION }}" # TODO: update to your region
-  SERVICE: "my-backend-app"   # Назва Cloud Run сервісу
+  SERVICE: "my-backend-app" # Назва Cloud Run сервісу
 
 jobs:
   deploy:
@@ -38,6 +38,7 @@ jobs:
           region: "${{ env.REGION }}"
           project_id: "${{ env.PROJECT_ID }}"
           source: "./apps/backend"
+          allow-unauthenticated: "true"
 
       # 4. Показати URL задеплоєного сервісу
       - name: "Show output"
