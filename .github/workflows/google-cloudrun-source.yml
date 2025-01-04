@@ -1,0 +1,44 @@
+name: "Deploy to Cloud Run from Source"
+
+on:
+  push:
+    branches:
+      - "$master"
+
+env:
+  PROJECT_ID: "${{ secrets.PROJECT_ID }}" # TODO: update to your Google Cloud project ID
+  REGION: "${{ secrets.REGION }}" # TODO: update to your region
+  SERVICE: "my-backend-app"   # Назва Cloud Run сервісу
+
+jobs:
+  deploy:
+    runs-on: "ubuntu-latest"
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      # 1. Крок "checkout": завантажує код із репозиторію
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      # 2. Аутентифікація в Google Cloud
+      - name: "Authenticate to Google Cloud"
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
+
+      # 3. Деплой у Cloud Run
+      - name: "Deploy to Cloud Run"
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: "${{ env.SERVICE }}"
+          region: "${{ env.REGION }}"
+          project_id: "${{ env.PROJECT_ID }}"
+          source: "./apps/backend"
+
+      # 4. Показати URL задеплоєного сервісу
+      - name: "Show output"
+        run: echo "${{ steps.deploy.outputs.url }}"
